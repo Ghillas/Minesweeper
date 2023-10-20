@@ -4,7 +4,7 @@ package model;
 public class Plateau {
 
     private int hauteur, largeur, nb_bombe;
-    private Case[][] plateau;
+    public Case[][] plateau;
 
 
     public Plateau(int a, int b, int c) {
@@ -66,6 +66,24 @@ public class Plateau {
         }
 
         return tot;
+    }
+
+
+    public int getHauteur() {
+        return hauteur;
+    }
+
+    public int getLargeur() {
+        return largeur;
+    }
+
+    public int getNbBombe() {
+        return nb_bombe;
+    }
+
+
+    public void generate_bombe() {
+        //TODO : generate random location for all bombe
     }
 
 
