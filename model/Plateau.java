@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Random;
 
 public class Plateau {
 
@@ -12,6 +13,7 @@ public class Plateau {
         this.largeur = b;
         this.nb_bombe = c;
         this.plateau = new Case[this.hauteur][this.largeur];
+        this.generate_grid();
     }
 
     public Plateau(int a, int b) {
@@ -19,6 +21,7 @@ public class Plateau {
         this.largeur = b;
         this.nb_bombe = (a + b) / 2;
         this.plateau = new Case[this.hauteur][this.largeur];
+        this.generate_grid();
     }
 
     public Plateau() {
@@ -26,6 +29,7 @@ public class Plateau {
         this.largeur = 10;
         this.nb_bombe = 10;
         this.plateau = new Case[this.hauteur][this.largeur];
+        this.generate_grid();
     }
 
 
@@ -82,8 +86,28 @@ public class Plateau {
     }
 
 
-    public void generate_bombe() {
-        //TODO : generate random location for all bombe
+    public void generate_grid() {
+        Random rand = new Random();
+        for (int i = 0 ; i < nb_bombe; i++) { // on place toutes les bombes
+            boolean correct_emplacement = false;
+            while(!correct_emplacement) {
+                int x = rand.nextInt(hauteur);
+                int y = rand.nextInt(largeur);
+                if(!(plateau[x][y] instanceof Bombe)) {
+                    plateau[x][y] = new Bombe(x, y, false);
+                    correct_emplacement = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < hauteur; i++) { // on place les cases libre
+            for (int j = 0; j < largeur; j++) {
+                if(!(plateau[i][j] instanceof Bombe)) {
+                    plateau[i][j] = new Libre(i, j, false, calcul_voisin(i, j));
+                }
+            }
+        }
+
     }
 
 

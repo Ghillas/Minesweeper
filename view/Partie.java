@@ -35,7 +35,7 @@ public class Partie {
 
     public void draw_game() {
         panel = new JPanel(new BorderLayout());
-        boutton_top = new JPanel(new GridLayout(2, 1));
+        boutton_top = new JPanel(new GridLayout(1,2));
         recommencer = new JButton("Restart");
         quitter = new JButton("Leave");
 
@@ -56,6 +56,8 @@ public class Partie {
                 grille.add(grille_boutton[i][j]);
             }
         }
+        panel.add(grille);
+        frame.setContentPane(panel);
         frame.revalidate();
         frame.repaint();
     }
@@ -70,8 +72,12 @@ public class Partie {
             }
             defaite();
         } else {
-            //TODO : print the number of Bombe arounds this Case and setEnabled(false)
+            grille_boutton[x][y].setEnabled(false);
+            Libre tmp = (Libre) jeu.plateau[x][y];
+            grille_boutton[x][y].setText(String.valueOf(tmp.getVoisin()));
         }
+        frame.revalidate();
+        frame.repaint();
     }
 
 
