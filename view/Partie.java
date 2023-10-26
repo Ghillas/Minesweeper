@@ -13,7 +13,7 @@ import javax.imageio.*;
 
 public class Partie {
 
-    private JPanel panel, grille, boutton_top;
+    private JPanel panel, grille, boutton_top,text_bottom;
     private JFrame frame;
     private JButton[][] grille_boutton;
     private JButton recommencer, quitter;
@@ -26,7 +26,8 @@ public class Partie {
         jeu = p;
         frame = new JFrame("Minesweeper");
         frame.setVisible(true);
-        frame.setSize(jeu.getHauteur() * 50, jeu.getLargeur() * 50);
+        int taille_elt = 100;
+        frame.setSize(jeu.getHauteur() * taille_elt, jeu.getLargeur() * taille_elt);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         draw_game();
@@ -51,6 +52,13 @@ public class Partie {
             for(int j = 0; j < jeu.getLargeur(); j++) {
                 int x = i;
                 int y = j;
+                /*if(jeu.plateau[i][j] instanceof Bombe) {
+                    grille_boutton[i][j] = new JButton("B");
+                    grille_boutton[i][j].setBackground(Color.CYAN);
+                } else {
+                    Libre lb = (Libre) jeu.plateau[i][j];
+                    grille_boutton[i][j] = new JButton(String.valueOf(lb.getVoisin()));
+                }*/
                 grille_boutton[i][j] = new JButton();
                 grille_boutton[i][j].addActionListener((event) -> grid_management(x,y));
                 grille.add(grille_boutton[i][j]);
@@ -75,6 +83,11 @@ public class Partie {
             grille_boutton[x][y].setEnabled(false);
             Libre tmp = (Libre) jeu.plateau[x][y];
             grille_boutton[x][y].setText(String.valueOf(tmp.getVoisin()));
+            Font my_font = grille_boutton[x][y].getFont();
+            Font newFont = new Font(my_font.getFontName(), my_font.getStyle(), my_font.getSize() + 30);
+            grille_boutton[x][y].setFont(newFont);
+            //grille_boutton[x][y].setOpaque(true);
+            //grille_boutton[x][y].setForeground(Color.BLACK);
         }
         frame.revalidate();
         frame.repaint();
@@ -83,11 +96,22 @@ public class Partie {
 
 
     public void restart_game() {
-        //TODO : regénérer aleatoirement le plateau + tout les JButton
+        jeu.generate_grid();
+        draw_game();
     }
 
     public void defaite() {
-        //TODO : setEnabled(false) for all button + message on bottom (lost)
+        for(int i = 0; i < jeu.getHauteur(); i++) {
+            for(int j = 0; j < jeu.getLargeur(); j++) {
+                grille_boutton[i][j].setEnabled(false);
+            }
+        }
+        JLabel lab = new JLabel("Vous avez perdu");
+        lab.setFont(lab.getFont().deriveFont(20f));
+        text_bottom = new JPanel();
+        text_bottom.add(lab);
+        panel.add(text_bottom,BorderLayout.SOUTH);
+        frame.setContentPane(panel);
     }
 
 

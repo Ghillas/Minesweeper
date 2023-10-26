@@ -45,30 +45,29 @@ public class Plateau {
 
     public int calcul_voisin(int a, int b) {
         int tot = 0;
-        if(b > 0) { // on regarde les 3 cases au dessus de nous
-            for(int i = a-1 >= 0 ? a : 0; i <= a+1 && i < largeur; i++) {
-                if(plateau[i][b-1] instanceof Bombe) {
+        if(a > 0) { // on regarde les 3 cases au dessus de nous
+            for(int i = b-1 >= 0 ? b-1 : 0; i <= b+1 && i < largeur; i++) {
+                if(plateau[a-1][i] instanceof Bombe) {
                     tot++;
                 }
             }
         }
 
         // on regarde les 3 cases sur notre ligne (dont la case actuel mais cela n'a pas d'influence sur le résultat)
-        for(int i = a-1 >= 0 ? a : 0; i < a+1 && i < largeur; i++) {
-            if(plateau[i][b] instanceof Bombe) {
+        for(int i = b-1 >= 0 ? b-1 : 0; i <= b+1 && i < largeur; i++) {
+            if(plateau[a][i] instanceof Bombe) {
                 tot++;
             }
         }
 
         // on regarde les 3 cases en dessous de nous
-        if(b < hauteur - 1) {
-            for(int i = a-1 >= 0 ? a : 0; i <= a+1 && i < largeur; i++) {
-                if(plateau[i][b+1] instanceof Bombe) {
+        if(a < hauteur - 1) {
+            for(int i = b-1 >= 0 ? b-1 : 0; i <= b+1 && i < largeur; i++) {
+                if(plateau[a+1][i] instanceof Bombe) {
                     tot++;
                 }
             }
         }
-
         return tot;
     }
 
@@ -88,6 +87,7 @@ public class Plateau {
 
     public void generate_grid() {
         Random rand = new Random();
+        plateau = new Case[this.hauteur][this.largeur];
         for (int i = 0 ; i < nb_bombe; i++) { // on place toutes les bombes
             boolean correct_emplacement = false;
             while(!correct_emplacement) {
