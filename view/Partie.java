@@ -80,19 +80,47 @@ public class Partie {
             }
             defaite();
         } else {
-            grille_boutton[x][y].setEnabled(false);
-            Libre tmp = (Libre) jeu.plateau[x][y];
-            grille_boutton[x][y].setText(String.valueOf(tmp.getVoisin()));
-            Font my_font = grille_boutton[x][y].getFont();
-            Font newFont = new Font(my_font.getFontName(), my_font.getStyle(), my_font.getSize() + 30);
-            grille_boutton[x][y].setFont(newFont);
-            //grille_boutton[x][y].setOpaque(true);
-            //grille_boutton[x][y].setForeground(Color.BLACK);
+            jeu.decouvre_case(x, y);
+            decouvre_case(x, y);
+            if (jeu.victoire()) {
+                victoire();
+            }
         }
         frame.revalidate();
         frame.repaint();
     }
 
+    public void decouvre_case(int x, int y) {
+        grille_boutton[x][y].setEnabled(false);
+        Libre tmp = (Libre) jeu.plateau[x][y];
+        grille_boutton[x][y].setText(String.valueOf(tmp.getVoisin()));
+        Font my_font = grille_boutton[x][y].getFont();
+        Font newFont = new Font(my_font.getFontName(), my_font.getStyle(), my_font.getSize() + 30);
+        grille_boutton[x][y].setFont(newFont);
+        grille_boutton[x][y].setBackground(Color.YELLOW);
+        //grille_boutton[x][y].setOpaque(true);
+        //grille_boutton[x][y].setForeground(Color.BLACK);
+
+        jeu.plateau[x][y].setDecouvert(true);
+        if(tmp.getVoisin() == 0) {
+            if(x > 0 && !jeu.plateau[x-1][y].getDecouvert()) // au dessus
+                decouvre_case(x - 1, y);
+            if(x < jeu.getHauteur() - 1 && !jeu.plateau[x+1][y].getDecouvert()) // en dessous
+                decouvre_case(x + 1, y);
+            if(y > 0 && !jeu.plateau[x][y-1].getDecouvert()) // a gauche
+                decouvre_case(x, y - 1);
+            if(y < jeu.getLargeur() - 1 && !jeu.plateau[x][y+1].getDecouvert()) // a droite
+                decouvre_case(x, y + 1);
+            if(x > 0 && y > 0 && !jeu.plateau[x-1][y-1].getDecouvert()) // au dessus a gauche
+                decouvre_case(x - 1, y - 1);
+            if(x < jeu.getHauteur() - 1 && y < jeu.getLargeur() - 1 && !jeu.plateau[x+1][y+1].getDecouvert()) // en dessous a droite
+                decouvre_case(x + 1, y + 1);
+            if(x < jeu.getHauteur() - 1 && y > 0 && !jeu.plateau[x+1][y-1].getDecouvert()) // au dessus a gauche
+                decouvre_case(x + 1, y - 1);
+            if(x > 0 && y < jeu.getLargeur() - 1 && !jeu.plateau[x-1][y+1].getDecouvert()) // en dessous a droite
+                decouvre_case(x - 1, y + 1);
+        }
+    }
 
 
     public void restart_game() {
@@ -107,6 +135,20 @@ public class Partie {
             }
         }
         JLabel lab = new JLabel("Vous avez perdu");
+        lab.setFont(lab.getFont().deriveFont(20f));
+        text_bottom = new JPanel();
+        text_bottom.add(lab);
+        panel.add(text_bottom,BorderLayout.SOUTH);
+        frame.setContentPane(panel);
+    }
+
+    public void victoire() {
+        for(int i = 0; i < jeu.getHauteur(); i++) {
+            for(int j = 0; j < jeu.getLargeur(); j++) {
+                grille_boutton[i][j].setEnabled(false);
+            }
+        }
+        JLabel lab = new JLabel("Félicitation, vous avez gagnez");
         lab.setFont(lab.getFont().deriveFont(20f));
         text_bottom = new JPanel();
         text_bottom.add(lab);

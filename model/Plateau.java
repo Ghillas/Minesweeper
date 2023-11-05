@@ -6,12 +6,14 @@ public class Plateau {
 
     private int hauteur, largeur, nb_bombe;
     public Case[][] plateau;
+    private int case_cacher;
 
 
     public Plateau(int a, int b, int c) {
         this.hauteur = a;
         this.largeur = b;
         this.nb_bombe = c;
+        this.case_cacher = a * b;
         this.plateau = new Case[this.hauteur][this.largeur];
         this.generate_grid();
     }
@@ -20,6 +22,7 @@ public class Plateau {
         this.hauteur = a;
         this.largeur = b;
         this.nb_bombe = (a + b) / 2;
+        this.case_cacher = a * b;
         this.plateau = new Case[this.hauteur][this.largeur];
         this.generate_grid();
     }
@@ -28,18 +31,24 @@ public class Plateau {
         this.hauteur = 10;
         this.largeur = 10;
         this.nb_bombe = 10;
+        this.case_cacher = 100; // 10 * 10 = nombre de case sur  le plateau
         this.plateau = new Case[this.hauteur][this.largeur];
         this.generate_grid();
     }
 
 
-    public int decouvre_case(int a, int b) {
+    /*public int decouvre_case(int a, int b) {
         if(plateau[a][b] instanceof Bombe) {
             return -1;
         } else {
             plateau[a][b].setDecouvert(true);
+            case_cacher--;
             return calcul_voisin(a,b);
         }
+    }*/
+
+    public void decouvre_case(int a, int b) {
+        case_cacher--;
     }
 
 
@@ -108,6 +117,20 @@ public class Plateau {
             }
         }
 
+    }
+
+
+    public boolean victoire() {
+        /*int nb_cacher = 0;
+        for(int i = 0; i < hauteur; i++) {
+            for (int j = 0; j < largeur; j++) {
+                if(!plateau[i][j].getDecouvert()) {
+                    nb_cacher++;
+                }
+            }
+        }
+        return nb_cacher == nb_bombe;*/
+        return case_cacher == nb_bombe;
     }
 
 
