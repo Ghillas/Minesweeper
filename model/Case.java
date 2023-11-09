@@ -5,12 +5,14 @@ public abstract class Case {
 
     private int coord_x, coord_y;
     private boolean decouvert;
+    private boolean flag;
 
 
     public Case(int i, int j, boolean b) {
         this.coord_x = i;
         this.coord_y = j;
         this.decouvert = b;
+        this.flag = false;
     }
 
 
@@ -18,6 +20,7 @@ public abstract class Case {
         this.coord_x = i;
         this.coord_y = j;
         this.decouvert = false;
+        this.flag = false;
     }
 
 
@@ -44,6 +47,14 @@ public abstract class Case {
 
     public void setDecouvert(boolean b) {
         decouvert = b;
+    }
+
+    public boolean getFlag() {
+        return this.flag;
+    }
+
+    public void setFlag(boolean b) {
+        this.flag = b;
     }
 
 }

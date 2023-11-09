@@ -49,6 +49,8 @@ public class Plateau {
 
     public void decouvre_case(int a, int b) {
         case_cacher--;
+        plateau[a][b].setDecouvert(true);
+        //System.out.println("nombre de case restante : " + case_cacher);
     }
 
 

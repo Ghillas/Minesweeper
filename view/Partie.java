@@ -52,15 +52,26 @@ public class Partie {
             for(int j = 0; j < jeu.getLargeur(); j++) {
                 int x = i;
                 int y = j;
-                /*if(jeu.plateau[i][j] instanceof Bombe) {
+                if(jeu.plateau[i][j] instanceof Bombe) {
                     grille_boutton[i][j] = new JButton("B");
                     grille_boutton[i][j].setBackground(Color.CYAN);
                 } else {
                     Libre lb = (Libre) jeu.plateau[i][j];
                     grille_boutton[i][j] = new JButton(String.valueOf(lb.getVoisin()));
-                }*/
-                grille_boutton[i][j] = new JButton();
-                grille_boutton[i][j].addActionListener((event) -> grid_management(x,y));
+                }
+                //grille_boutton[i][j] = new JButton();
+                //grille_boutton[i][j].addActionListener((event) -> grid_management(x,y));
+
+                grille_boutton[i][j].addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e)  {
+                        if (e.getButton() == 1) {
+                            grid_management(x,y);
+                        } else {
+                            put_flag(x,y);
+                        }
+                    }
+                });
+                
                 grille.add(grille_boutton[i][j]);
             }
         }
@@ -73,16 +84,16 @@ public class Partie {
     public void grid_management(int x, int y) {
         if(jeu.plateau[x][y] instanceof Bombe) {
             try {
-                Image photo = ImageIO.read(new File("./bombe.png"));
+                Image photo = ImageIO.read(new File("./image/bombe.ico"));
                 grille_boutton[x][y].setIcon(new ImageIcon(photo)); 
             } catch(Exception e) {
                 grille_boutton[x][y].setBackground(Color.BLACK);
             }
             defaite();
         } else {
-            jeu.decouvre_case(x, y);
             decouvre_case(x, y);
             if (jeu.victoire()) {
+                
                 victoire();
             }
         }
@@ -101,7 +112,7 @@ public class Partie {
         //grille_boutton[x][y].setOpaque(true);
         //grille_boutton[x][y].setForeground(Color.BLACK);
 
-        jeu.plateau[x][y].setDecouvert(true);
+        jeu.decouvre_case(x, y);
         if(tmp.getVoisin() == 0) {
             if(x > 0 && !jeu.plateau[x-1][y].getDecouvert()) // au dessus
                 decouvre_case(x - 1, y);
@@ -122,8 +133,26 @@ public class Partie {
         }
     }
 
+    public void put_flag(int x, int y) {
+        if (jeu.plateau[x][y].getFlag()) {
+            //enlever le flag
+            grille_boutton[x][y].setBackground(Color.white);
+            jeu.plateau[x][y].setFlag(false);
+        } else {
+            //mettre le flag
+            try {
+                Image photo = ImageIO.read(new File("./image/drapeau.ico"));
+                grille_boutton[x][y].setIcon(new ImageIcon(photo)); 
+            } catch(Exception e) {
+                grille_boutton[x][y].setBackground(Color.red);
+            } finally {
+                jeu.plateau[x][y].setFlag(true);
+            }
+        }
+    }
 
     public void restart_game() {
+        jeu = new Plateau(jeu.getHauteur(),jeu.getLargeur(), jeu.getNbBombe());
         jeu.generate_grid();
         draw_game();
     }
